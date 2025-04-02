@@ -29,17 +29,30 @@
               <div class="brand-logo">
                 <img src="/Dashboard/images/logo.svg" alt="logo">
               </div>
+              @if (Session::has('success'))
+                <div class="alert alert-success">{{ Session::get('success') }}</div>
+              @endif
+              @if(Session::has('error'))
+                <div class="alert alert-danger">{{ Session::get('error') }}</div>
+              @endif
               <h4>Hello! let's get started</h4>
               <h6 class="font-weight-light">Sign in to continue.</h6>
-              <form class="pt-3">
+              <form class="pt-3" method="post" action="{{ route('admin.authenticate' ) }}">
+              @csrf
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username">
+                  <input type="email" class="form-control form-control-lg" name="email" id="exampleInputEmail1" placeholder="Username">
+                  @error('email')
+                      <p class="invalid-feedback">{{ $message }}</p>
+                  @enderror
                 </div>
                 <div class="form-group">
-                  <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
+                  <input type="password" class="form-control form-control-lg" name="password" id="exampleInputPassword1" placeholder="Password">
+                  @error('password')
+                      <p class="invalid-feedback">{{ $message }}</p>
+                  @enderror
                 </div>
                 <div class="mt-3">
-                  <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" href="../../index.html">SIGN IN</a>
+                  <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit">SIGN IN</button>
                 </div>
                 <div class="my-2 d-flex justify-content-between align-items-center">
                   <div class="form-check">
