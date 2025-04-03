@@ -29,39 +29,31 @@
               <div class="brand-logo">
                 <img src="/Dashboard/images/logo.svg" alt="logo">
               </div>
-              @if (Session::has('success'))
-                <div class="alert alert-success">{{ Session::get('success') }}</div>
+              @if (session('status'))
+                <div class="alert alert-success"> {{ session('status') }}</div>
               @endif
-              @if(Session::has('error'))
-                <div class="alert alert-danger">{{ Session::get('error') }}</div>
-              @endif
-              <h4>Hello! let's get started</h4>
-              <h6 class="font-weight-light">Sign in to continue.</h6>
-              <form class="pt-3" method="post" action="{{ route('admin.authenticate' ) }}">
+              <h4>{{ __('Reset Password') }}</h4>
+              <h6 class="font-weight-light">Please enter valid details to reset password</h6>
+              <form class="pt-3" method="post" action="{{ route('password.update') }}">
               @csrf
+              <input type="hidden" name="token" value="{{ $token }}">
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-lg" name="email" id="exampleInputEmail1" placeholder="Username">
+                  <input type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" name="email"  value="{{ old('email') }}" id="exampleInputEmail1" placeholder="Email / Username" required autocomplete="email" autofocus>
                   @error('email')
                       <p class="invalid-feedback">{{ $message }}</p>
                   @enderror
                 </div>
                 <div class="form-group">
-                  <input type="password" class="form-control form-control-lg" name="password" id="exampleInputPassword1" placeholder="Password">
+                  <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" name="password" id="password" placeholder="Password" required autocomplete="new-password">
                   @error('password')
                       <p class="invalid-feedback">{{ $message }}</p>
                   @enderror
                 </div>
-                <div class="mt-3">
-                  <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit">SIGN IN</button>
+                <div class="form-group">
+                  <input type="password" class="form-control form-control-lg" name="password_confirmation" id="password-confirm" placeholder="Password" required autocomplete="new-password">
                 </div>
-                <div class="my-2 d-flex justify-content-between align-items-center">
-                  <div class="form-check">
-                    <label class="form-check-label text-muted">
-                      <input type="checkbox" class="form-check-input">
-                      Keep me signed in
-                    </label>
-                  </div>
-                  <a href="{{ URL::to('/admin/password/reset')}}" class="auth-link text-black">Forgot password?</a>
+                <div class="mt-3">
+                  <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit">{{ __('Reset Password') }}</button>
                 </div>
               </form>
             </div>
