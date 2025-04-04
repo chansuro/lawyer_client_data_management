@@ -79,6 +79,7 @@
                   </p>
                 </div>
               </a>
+              
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
                   <div class="preview-icon bg-info">
@@ -96,12 +97,16 @@
           </li>
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <img src="/Dashboard/images/faces/face28.jpg" alt="profile"/>
+              <img src="{{ asset('storage/' . Auth::guard('admin')->user()->avatar) }}" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
+              <a class="dropdown-item" href="{{ route('admin.updateprofile') }}">
                 <i class="ti-settings text-primary"></i>
                 Settings
+              </a>
+              <a class="dropdown-item" href="{{ route('admin.updatepassword') }}">
+                <i class="ti-lock text-primary"></i>
+                Update password
               </a>
               <a class="dropdown-item" href="{{ route('admin.logout') }}">
                 <i class="ti-power-off text-primary"></i>
