@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\LoginController;
 use App\Http\Controllers\admin\UpdateProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\admin\TemplateController;
 
 
 Route::get('/', function () {
@@ -27,6 +28,9 @@ Route::group(['prefix' => 'admin'],function(){
         Route::get('updateprofile',[UpdateProfileController::class,'updateprofile'])->name('admin.updateprofile');
         Route::post('update-profile', [UpdateProfileController::class, 'updateProfileAction'])->name('update.profile');
         Route::post('update-avatar', [UpdateProfileController::class, 'updateAvatar'])->name('update.avatar');
+        Route::get('gettemplate/{type}', [TemplateController::class, 'getTemplates'])->name('template.get');
+        Route::get('gettemplate/add/{type}', [TemplateController::class, 'createTemplates'])->name('template.createtemplate');
+        Route::post('add-template', [TemplateController::class, 'create'])->name('template.add');
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });
