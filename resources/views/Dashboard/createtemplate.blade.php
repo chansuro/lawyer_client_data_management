@@ -26,7 +26,7 @@
                   @if ($type == 'email')
                     <div class="form-group">
                       <label for="exampleInputPassword1">Subject</label>
-                      <input type="pastextsword" class="form-control" name="subject" id="exampleInputSubject" placeholder="Subject">
+                      <input type="text" class="form-control" name="subject" id="exampleInputSubject" placeholder="Subject">
                     </div>
                   @endif
                     <div class="form-group">
