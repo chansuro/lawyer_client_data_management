@@ -10,7 +10,7 @@ class TemplateController extends Controller
 {
     //
     public function getTemplates($type){
-        $templates = Template::where('type',$type)->paginate(2);
+        $templates = Template::where('type',$type)->paginate(20);
         return view('Dashboard.gettemplate',['type'=>$type,'templates'=>$templates]);
     }
 

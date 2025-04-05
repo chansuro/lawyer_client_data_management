@@ -5,35 +5,53 @@
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">List template: {{$type}}</h4>
-                  <a class="btn btn-primary" style="float:right" href="{{ route('template.createtemplate',['type' => $type ]) }}">Add Template</a>
+                  <h4 class="card-title">List campaign</h4>
+                  <a class="btn btn-primary" style="float:right" href="{{route('campaign.add')}}">Add Campaign</a>
                   <!--  -->
                   <div class="table-responsive pt-3">
                     <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>
-                            Subject
+                            Name
                           </th>
                           <th>
-                            Message
+                            SMS
                           </th>
                           <th>
-                            Created on
+                            Email
+                          </th>
+                          <th>
+                            WhatsApp
+                          </th>
+                          <th>
+                            Sent on
+                          </th>
+                          <th>
+                            Created On
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                      @foreach ($templates as $template)
+                      @foreach ($campaigns as $campaign)
                         <tr>
                           <td>
-                          {{ $template->subject }}
+                          {{ $campaign->name }}
                           </td>
                           <td>
-                          {{ $template->message }}
+                          {{ $campaign->sms }}
                           </td>
                           <td>
-                          {{ $template->created_at }}
+                          {{ $campaign->email }}
+                          </td>
+                          <td>
+                          {{ $campaign->whatsapp }}
+                          </td>
+                          <td>
+                          {{ $campaign->sent_on }}
+                          </td>
+                          <td>
+                          {{ $campaign->created_at }}
                           </td>
                         </tr>
                         @endforeach
@@ -42,8 +60,9 @@
                     
                   </div>
                   <!--  -->
-                </div><!-- Pagination Links -->
-                  {{ $templates->links() }}
+                </div>
+                <!-- Pagination Links -->
+                {{ $campaigns->links() }}
               </div>
               
             </div>

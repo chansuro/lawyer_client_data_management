@@ -7,7 +7,8 @@ use App\Http\Controllers\admin\UpdateProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\admin\TemplateController;
-
+use App\Http\Controllers\admin\CampaignController;
+use App\Http\Controllers\admin\CustomerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,7 +31,11 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('update-avatar', [UpdateProfileController::class, 'updateAvatar'])->name('update.avatar');
         Route::get('gettemplate/{type}', [TemplateController::class, 'getTemplates'])->name('template.get');
         Route::get('gettemplate/add/{type}', [TemplateController::class, 'createTemplates'])->name('template.createtemplate');
-        Route::post('add-template', [TemplateController::class, 'create'])->name('template.add');
+        Route::get('getcampaign', [CampaignController::class, 'index'])->name('campaign.get');
+        Route::get('addcampaign', [CampaignController::class, 'addacmpaign'])->name('campaign.add');
+        Route::post('add-password', [UpdateProfileController::class, 'updatePassword'])->name('update.password');
+        Route::post('add-campaign', [CampaignController::class, 'create'])->name('campaign.create');
+        Route::get('getcustomer', [CustomerController::class, 'index'])->name('customer.get');
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });
