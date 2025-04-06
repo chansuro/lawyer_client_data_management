@@ -64,6 +64,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                      @if(count($customers) > 0)
                       @foreach ($customers as $customer)
                         <tr>
                           <td>
@@ -171,6 +172,13 @@
                           </div>
                         </div>
                         @endforeach
+                        @else
+                        <tr>
+                          <td colspan="7" style="text-align: center;">
+                            <p>No customers found.</p>
+                          </td>
+                        </tr>
+                        @endif
                       </tbody>
                     </table>
                     

@@ -59,4 +59,10 @@ class CampaignController extends Controller
         return back()->with('success', 'CSV uploaded and processed!');
 
     }
+
+    public function campaigndelete($id){
+        Customer::where('campaign_id', $id)->delete();
+        Campaign::where('id', $id)->delete();
+        return back()->with('success', 'Campaign deleted successfully!');
+    }
 }

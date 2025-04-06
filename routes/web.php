@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::get('getcustomer/{id}', [CustomerController::class, 'campaignwise'])->name('customer.campaignwise');
         Route::post('getcustomer/{id}', [CustomerController::class, 'campaignwise'])->name('customer.searchcampaignwise');
         Route::delete('customer/delete/{id}', [CustomerController::class, 'customerdelete'])->name('customer.customerdelete');
+        Route::delete('campaign/delete/{id}', [CampaignController::class, 'campaigndelete'])->name('campaign.campaigndelete');
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });
