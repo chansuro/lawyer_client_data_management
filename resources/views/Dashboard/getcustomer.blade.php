@@ -7,7 +7,7 @@
                 <div class="card-body">
                   <h4 class="card-title">Customers </h4>
                   <!--  -->
-                  <form class="forms-sample" method="post" action="{{ route('customer.search') }}" enctype="multipart/form-data">
+                  <form class="forms-sample" method="post" action="@if ($campaignId == null) ? {{ route('customer.search') }} @else {{ route('customer.searchcampaignwise', ['id' => $campaignId]) }}@endif" enctype="multipart/form-data">
                   @csrf
                     <ul class="navbar-nav mr-lg-2">
                       <li class="nav-item nav-search d-none d-lg-block">
@@ -118,7 +118,7 @@
                               </div>
                               <div class="row">
                                 <div class="col-md-3">Date</div>
-                                <div class="col-md-9">{{ $customer->date_filing }}</div>
+                                <div class="col-md-9">{{ \Carbon\Carbon::parse($customer->date_filing)->format('d-M-Y') }}</div>
                               </div>
                               <div class="row">
                                 <div class="col-md-3">Reason</div>
@@ -130,7 +130,7 @@
                               </div>
                               <div class="row">
                                 <div class="col-md-3">Notice Date</div>
-                                <div class="col-md-9">{{ $customer->notice_date }}</div>
+                                <div class="col-md-9">{{ \Carbon\Carbon::parse($customer->notice_date)->format('d-M-Y') }}</div>
                               </div>
                               </div>
                             </div>

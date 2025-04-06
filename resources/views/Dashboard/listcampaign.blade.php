@@ -30,6 +30,9 @@
                           <th>
                             Created On
                           </th>
+                          <th>
+                            Action
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -52,6 +55,10 @@
                           </td>
                           <td>
                           {{ $campaign->created_at }}
+                          </td>
+                          <td>
+                          <a href="{{route('customer.campaignwise',['id'=> $campaign->id ])}}">
+                          <i class="ti-user"></i></a>
                           </td>
                         </tr>
                         @endforeach
