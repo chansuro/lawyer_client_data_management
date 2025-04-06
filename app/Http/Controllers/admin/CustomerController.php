@@ -37,5 +37,10 @@ class CustomerController extends Controller
         $customers = $query->orderBy('created_at', 'desc')->paginate(20);
         return view('Dashboard.getcustomer',['customers'=>$customers,'campaignId'=>$campaignId]);
     }
+
+    public function customerdelete($id){
+        Customer::where('id', $id)->delete();
+        return back()->with('success', 'Customer deleted successfully!');
+    }
     
 }

@@ -39,6 +39,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('getcustomer', [CustomerController::class, 'index'])->name('customer.search');
         Route::get('getcustomer/{id}', [CustomerController::class, 'campaignwise'])->name('customer.campaignwise');
         Route::post('getcustomer/{id}', [CustomerController::class, 'campaignwise'])->name('customer.searchcampaignwise');
+        Route::delete('customer/delete/{id}', [CustomerController::class, 'customerdelete'])->name('customer.customerdelete');
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });
