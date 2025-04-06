@@ -32,6 +32,9 @@
   <script src="/Dashboard/js/dashboard.js"></script>
   <script src="/Dashboard/js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+2. Add Modal Trigg
 </body>
 
 </html>
