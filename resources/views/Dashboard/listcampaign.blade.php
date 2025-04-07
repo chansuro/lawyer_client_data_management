@@ -79,9 +79,9 @@
                             <i class="ti-trash"></i>
                           </button>
 
-                          <button class="btn btn-transparent border-0 p-0 m-0">
+                          <a href="{{route('customer.export', ['id'=>$campaign->id] )}}" class="btn btn-transparent border-0 p-0 m-0">
                               <i class="ti-download"></i> 
-                          </button>
+</a>
                           </td>
                         </tr>
                         <!-- Delete Confirmation Modal -->

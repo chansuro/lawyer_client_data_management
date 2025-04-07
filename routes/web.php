@@ -41,6 +41,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('getcustomer/{id}', [CustomerController::class, 'campaignwise'])->name('customer.searchcampaignwise');
         Route::delete('customer/delete/{id}', [CustomerController::class, 'customerdelete'])->name('customer.customerdelete');
         Route::delete('campaign/delete/{id}', [CampaignController::class, 'campaigndelete'])->name('campaign.campaigndelete');
+        Route::get('/export-csv/{id}', [CustomerController::class, 'export'])->name('customer.export');
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });

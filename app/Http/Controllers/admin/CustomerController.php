@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CustomerController extends Controller
 {
@@ -41,6 +42,31 @@ class CustomerController extends Controller
     public function customerdelete($id){
         Customer::where('id', $id)->delete();
         return back()->with('success', 'Customer deleted successfully!');
+    }
+
+    public function export($id)
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="users.csv"',
+        ];
+        $customers = Customer::selectRaw("name, email")->where('campaign_id',$id)->get();
+        $callback = function () use ($customers) {
+            $handle = fopen('php://output', 'w');
+
+            // CSV header
+            fputcsv($handle, [ 'Name', 'Email']);
+
+            // Fetch data from DB
+            
+            foreach ($customers as $customer) {
+               fputcsv($handle, [ $customer->name, $customer->email]);
+            }
+
+            fclose($handle);
+        };
+            
+        return new StreamedResponse($callback, 200, $headers);
     }
     
 }
