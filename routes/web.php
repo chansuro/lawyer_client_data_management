@@ -33,7 +33,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::get('gettemplate/add/{type}', [TemplateController::class, 'createTemplates'])->name('template.createtemplate');
         Route::get('getcampaign', [CampaignController::class, 'index'])->name('campaign.get');
         Route::get('addcampaign', [CampaignController::class, 'addacmpaign'])->name('campaign.add');
-        Route::post('add-password', [UpdateProfileController::class, 'updatePassword'])->name('update.password');
+        Route::post('add-password', [UpdateProfileController::class, 'updatePassword'])->name('update.passwordaction');
         Route::post('add-campaign', [CampaignController::class, 'create'])->name('campaign.create');
         Route::get('getcustomer', [CustomerController::class, 'index'])->name('customer.get');
         Route::post('getcustomer', [CustomerController::class, 'index'])->name('customer.search');

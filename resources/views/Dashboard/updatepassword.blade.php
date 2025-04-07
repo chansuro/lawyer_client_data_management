@@ -20,7 +20,7 @@
                   <p class="card-description">
                     Please enter your existing password and then add your new and confirm password.
                   </p>
-                  <form class="forms-sample" method="post" action="{{ route('update.password') }}">
+                  <form class="forms-sample" method="post" action="{{ route('update.passwordaction') }}">
                   @csrf
                     <div class="form-group">
                       <label for="exampleInputPassword1">Old Password</label>
