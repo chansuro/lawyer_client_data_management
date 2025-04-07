@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Campaign;
 use App\Models\Customer;
 use Carbon\Carbon;
+use App\Services\TwilioWhatsAppService;
+use App\Jobs\SendWhatsAppMessage;
 
 class CampaignController extends Controller
 {
@@ -64,5 +66,37 @@ class CampaignController extends Controller
         Customer::where('campaign_id', $id)->delete();
         Campaign::where('id', $id)->delete();
         return back()->with('success', 'Campaign deleted successfully!');
+    }
+    // send bulk whatsapp
+    public function sendBulk(Request $request, TwilioWhatsAppService $whatsapp)
+    {
+        // $numbers = $request->input('numbers'); // array of raw numbers like ['+1234567890']
+        // $message = $request->input('message');
+
+        // $results = [];
+
+        // foreach ($numbers as $number) {
+        //     try {
+        //         $results[$number] = $whatsapp->sendMessage($number, $message);
+        //     } catch (\Exception $e) {
+        //         $results[$number] = 'Error: ' . $e->getMessage();
+        //     }
+        // }
+
+        // return response()->json([
+        //     'status' => 'complete',
+        //     'results' => $results
+        // ]);
+        $recipients = [
+            '+919874386721'
+        ];
+
+        $message = '🔥 Hello! This is a bulk WhatsApp message via Laravel & Twilio.';
+        
+        foreach ($recipients as $contact) {
+            SendWhatsAppMessage::dispatch($contact, $message);
+        }
+    
+        return response()->json(['status' => 'queued', 'count' => count($recipients)]);
     }
 }

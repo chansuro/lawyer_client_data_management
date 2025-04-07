@@ -21,6 +21,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
         Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+        
     });
     Route::group(['middleware'=>'admin.auth'],function(){
         Route::get('dashboard',[AdminController::class,'index'])->name('admin.dashboard');
@@ -42,6 +43,8 @@ Route::group(['prefix' => 'admin'],function(){
         Route::delete('customer/delete/{id}', [CustomerController::class, 'customerdelete'])->name('customer.customerdelete');
         Route::delete('campaign/delete/{id}', [CampaignController::class, 'campaigndelete'])->name('campaign.campaigndelete');
         Route::get('/export-csv/{id}', [CustomerController::class, 'export'])->name('customer.export');
+        Route::post('send-bulk-whatsapp', [CampaignController::class, 'sendBulk'])->name('test.twilio');
+        
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });
