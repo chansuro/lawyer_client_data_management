@@ -20,7 +20,7 @@
                   <p class="card-description">
                     Please add {{$type}} template.
                   </p>
-                  <form class="forms-sample" method="post" action="{{ route('template.add') }}">
+                  <form class="forms-sample" method="post" action="{{ route('template.createtemplate',['type'=>$type]) }}">
                   @csrf
                   <input type="hidden" name="type" value="{{ $type }}">
                   @if ($type == 'email')

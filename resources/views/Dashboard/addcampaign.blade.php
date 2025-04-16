@@ -20,7 +20,7 @@
                   <p class="card-description">
                     Please add campaign to send email, sms and whatsapp.
                   </p>
-                  <form class="forms-sample" method="post" action="{{ route('campaign.create') }}" enctype="multipart/form-data">
+                  <form class="forms-sample" method="post" action="{{ route('email.send') }}" enctype="multipart/form-data">
                   @csrf
                     <div class="form-group">
                       <label for="exampleInputCampaignname">Campaign name</label>

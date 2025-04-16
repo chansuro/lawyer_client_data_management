@@ -27,7 +27,7 @@
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo">
-                <img src="/Dashboard/images/logo.svg" alt="logo">
+              K & B LEGAL ASSOCIATES
               </div>
               @if (Session::has('success'))
                 <div class="alert alert-success">{{ Session::get('success') }}</div>

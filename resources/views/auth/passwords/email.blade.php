@@ -26,14 +26,14 @@
         <div class="row w-100 mx-0">
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-              <div class="brand-logo">
-                <img src="/Dashboard/images/logo.svg" alt="logo">
+            <div class="brand-logo">
+              K & B LEGAL ASSOCIATES
               </div>
               @if (session('status'))
                 <div class="alert alert-success"> {{ session('status') }}</div>
               @endif
               <h4>Reset Password</h4>
-              <h6 class="font-weight-light">Please enter your email/username to reset password</h6>
+              <h6 class="font-weight-light">Please enter your email to reset password</h6>
               <form class="pt-3" method="post" action="{{ route('password.email') }}">
               @csrf
                 <div class="form-group">

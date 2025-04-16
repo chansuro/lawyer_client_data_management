@@ -26,8 +26,8 @@
         <div class="row w-100 mx-0">
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-              <div class="brand-logo">
-                <img src="/Dashboard/images/logo.svg" alt="logo">
+            <div class="brand-logo">
+              K & B LEGAL ASSOCIATES
               </div>
               @if (session('status'))
                 <div class="alert alert-success"> {{ session('status') }}</div>

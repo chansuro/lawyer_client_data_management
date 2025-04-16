@@ -1,7 +1,7 @@
 <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="http://kblegalassociates.com/" target="_blank">K & B LEGAL ASSOCIATES</a>. All rights reserved.</span>
+            
           </div>
         </footer>
         <!-- partial -->
@@ -34,7 +34,6 @@
   <!-- End custom js for this page-->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-2. Add Modal Trigg
 </body>
 
 </html>
