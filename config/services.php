@@ -39,5 +39,10 @@ return [
         'token' => env('TWILIO_TOKEN'),
         'whatsapp_from' => env('TWILIO_WHATSAPP_FROM'),
     ],
+    'mailchimp' => [
+        'key' => env('MAILCHIMP_API_KEY'),
+        'server_prefix' => env('MAILCHIMP_SERVER_PREFIX'),
+        'audience_id' => env('MAILCHIMP_AUDIENCE_ID'),
+    ],
 
 ];

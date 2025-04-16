@@ -9,6 +9,8 @@ use App\Models\Customer;
 use Carbon\Carbon;
 use App\Services\TwilioWhatsAppService;
 use App\Jobs\SendWhatsAppMessage;
+use App\Jobs\AddMailchimpSubscriber;
+use App\Jobs\SendMailchimpCampaign;
 
 class CampaignController extends Controller
 {
@@ -98,5 +100,29 @@ class CampaignController extends Controller
         }
     
         return response()->json(['status' => 'queued', 'count' => count($recipients)]);
+    }
+
+    public function sendBulkEmail(Request $request){
+        $emails = [
+            ['email' => 'chansuro@gmail.com', 'first_name' => 'Surajit', 'last_name' => 'Koly'],
+            ['email' => 'skoly06@gmail.com', 'first_name' => 'Surajit', 'last_name' => 'Koley'],
+        ];
+    
+        foreach ($emails as $user) {
+            AddMailchimpSubscriber::dispatch(
+                $user['email'],
+                $user['first_name'],
+                $user['last_name']
+            )->delay(now()->addSeconds(2)); // Optional delay
+        }
+
+        SendMailchimpCampaign::dispatch(
+            'March Newsletter',
+            'Surajit',
+            'skoly79@gmail.com',
+            '<h1>Hello!</h1><p>This is the April newsletter.</p>'
+        )->delay(now()->addMinutes(1)); // Wait to ensure subscribers are added
+
+        return response()->json(['message' => 'Newsletter scheduled']);
     }
 }
