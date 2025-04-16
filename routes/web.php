@@ -13,6 +13,9 @@ use App\Http\Controllers\admin\CustomerController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/privacy', function () {
+    return view('privacy');
+});
 Route::group(['prefix' => 'admin'],function(){
     Route::group(['middleware'=>'admin.guest'],function(){
         Route::get('login',[LoginController::class,'index'])->name('admin.login');
@@ -44,6 +47,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::delete('campaign/delete/{id}', [CampaignController::class, 'campaigndelete'])->name('campaign.campaigndelete');
         Route::get('/export-csv/{id}', [CustomerController::class, 'export'])->name('customer.export');
         Route::post('send-bulk-whatsapp', [CampaignController::class, 'sendBulk'])->name('test.twilio');
+        Route::post('send-bulk-email', [CampaignController::class, 'sendBulkEmail'])->name('email.send');
         
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
