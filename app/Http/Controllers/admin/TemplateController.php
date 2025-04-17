@@ -36,4 +36,31 @@ class TemplateController extends Controller
         $user = Template::create($input);
         return back()->with('success', 'Template added successfully.');
     }
+
+    public function editTemplates($type,$id){
+        $template = Template::where('type',$type)->where('id',$id)->first();
+        return view('Dashboard.edittemplate',['type'=>$type,'id'=>$id,'wildcards'=>config('app.TEMPLATE_WILDCARDS'),'template'=>$template]);
+    }
+
+    public function edit(Request $request){
+        $input = $request->except('_token');
+        $id = $input['id'];
+        $type = $input['type'];
+        if($input['type'] == 'email'){
+            $request->validate([
+                'type' => 'required',
+                'subject' => 'required',
+                'message' => 'required|string',
+            ]);
+            $updateArr = ['subject'=>$input['subject'],'message'=>$input['message']];
+        }else{
+            $request->validate([
+                'type' => 'required',
+                'message' => 'required',
+            ]);
+            $updateArr = ['message'=>$input['message']];
+        }
+        Template::where('id', $id)->where('type',$type)->update($updateArr);
+        return back()->with('success', 'Template updated successfully.');
+    }
 }

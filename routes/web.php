@@ -35,6 +35,9 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('update-avatar', [UpdateProfileController::class, 'updateAvatar'])->name('update.avatar');
         Route::get('gettemplate/{type}', [TemplateController::class, 'getTemplates'])->name('template.get');
         Route::get('gettemplate/add/{type}', [TemplateController::class, 'createTemplates'])->name('template.createtemplate');
+        Route::post('gettemplate/add', [TemplateController::class, 'create'])->name('template.createtemplateaction');
+        Route::get('gettemplate/add/{type}/{id}', [TemplateController::class, 'editTemplates'])->name('template.edittemplate');
+        Route::post('gettemplate/edit', [TemplateController::class, 'edit'])->name('template.edittemplateaction');
         Route::get('getcampaign', [CampaignController::class, 'index'])->name('campaign.get');
         Route::get('addcampaign', [CampaignController::class, 'addacmpaign'])->name('campaign.add');
         Route::post('add-password', [UpdateProfileController::class, 'updatePassword'])->name('update.passwordaction');

@@ -16,22 +16,23 @@
                           @endforeach
                       </ul>
                   @endif
-                  <h4 class="card-title">Add template: {{$type}}</h4>
+                  <h4 class="card-title">Edit template: {{$type}}</h4>
                   <p class="card-description">
                     Please add {{$type}} template.
                   </p>
-                  <form class="forms-sample" method="post" action="{{ route('template.createtemplateaction') }}">
+                  <form class="forms-sample" method="post" action="{{ route('template.edittemplateaction',['type'=>$type,'id'=>$id]) }}">
                   @csrf
                   <input type="hidden" name="type" value="{{ $type }}">
+                  <input type="hidden" name="id" value="{{ $id }}">
                   @if ($type == 'email')
                     <div class="form-group">
                       <label for="exampleInputPassword1">Subject</label>
-                      <input type="text" class="form-control" name="subject" id="exampleInputSubject" placeholder="Subject">
+                      <input type="text" class="form-control" name="subject" value="{{$template->subject}}" id="exampleInputSubject" placeholder="Subject">
                     </div>
                   @endif
                     <div class="form-group">
                       <label for="exampleInputConfirmPassword1">Message</label>
-                      <textarea name="message" id="exampleInputMessage" class="form-control"></textarea>
+                      <textarea name="message" id="exampleInputMessage" class="form-control">{{$template->message}}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
                     <a href="{{ route('template.get',['type'=>$type]) }}" class="btn btn-light">Back</a>

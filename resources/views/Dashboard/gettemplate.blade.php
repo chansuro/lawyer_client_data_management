@@ -21,6 +21,9 @@
                           <th>
                             Created on
                           </th>
+                          <th>
+                            Action
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -34,6 +37,11 @@
                           </td>
                           <td>
                           {{ $template->created_at }}
+                          </td>
+                          <td>
+                          <a href="{{route('template.edittemplate',['type'=>$type,'id'=>$template->id])}}" class="btn btn-transparent border-0 p-0 m-0">
+                              <i class="ti-pencil"></i> 
+                          </a>
                           </td>
                         </tr>
                         @endforeach
