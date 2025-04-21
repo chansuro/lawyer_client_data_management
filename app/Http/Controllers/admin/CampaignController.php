@@ -126,56 +126,34 @@ class CampaignController extends Controller
         $templateDetails = Template::where('id',$emailtemplateId)->first();
         $emailSubject = $templateDetails->subject;
         $emailMessage = $templateDetails->message;
-        // $emails = [
-        //     ['email' => 'chansuro@gmail.com', 'first_name' => 'Surajit', 'last_name' => 'Koly'],
-        //     ['email' => 'skoly06@gmail.com', 'first_name' => 'Surajit', 'last_name' => 'Koley'],
-        // ];
         $wildCards = config('app.TEMPLATE_WILDCARDS');
-        Log::info('User created', $wildCards);
-        foreach($wildCards as $k=>$v){
-            if($v == '[NAME]'){
-                $emailSubject = str_replace($v, '*|FNAME|* *|LNAME|*',$emailSubject);
-                $emailMessage = str_replace($v, '*|FNAME|* *|LNAME|*',$emailMessage);
-            }elseif($v == '[EMAIL]'){
-                $emailSubject = str_replace($v, '*|EMAIL|*',$emailSubject);
-                $emailMessage = str_replace($v, '*|EMAIL|*',$emailMessage);
-            }elseif($v == '[PHONE]'){
-                $emailSubject = str_replace($v, '*|PHONE|*',$emailSubject);
-                $emailMessage = str_replace($v, '*|PHONE|*',$emailMessage);
-            }elseif($v == '[ADDRESS]'){
-                $emailSubject = str_replace($v, '*|ADDRESS|*',$emailSubject);
-                $emailMessage = str_replace($v, '*|ADDRESS|*',$emailMessage);
+        $getCustomers = Customer::where('campaign_id',$input['campaignid'])->get();
+        $recipients = [];
+        foreach($getCustomers as $value){
+            ///// nnedd to update
+            $value->email = 'chansuro@gmail.com';
+            foreach($wildCards as $k=>$v){
+                if($v == '[NAME]'){
+                    $emailSubject = str_replace($v, $value->name,$emailSubject);
+                    $emailMessage = str_replace($v, '*|FNAME|*',$emailMessage);
+                }elseif($v == '[EMAIL]'){
+                    $emailSubject = str_replace($v, $value->email,$emailSubject);
+                    $emailMessage = str_replace($v, '*|EMAIL|*',$emailMessage);
+                }elseif($v == '[PHONE]'){
+                    $emailSubject = str_replace($v, '*|PHONE|*',$emailSubject);
+                    $emailMessage = str_replace($v, '*|PHONE|*',$emailMessage);
+                }elseif($v == '[ADDRESS]'){
+                    $emailSubject = str_replace($v, $value->address,$emailSubject);
+                    $emailMessage = str_replace($v, '*|ADDRESS|*',$emailMessage);
+                }
             }
+            $recipients[] = [
+                'email' => $value->email,
+                'first_name' => $value->name,
+                'last_name' => '',
+                'custom_subject' => $emailSubject,
+            ];
         }
-        // foreach ($emails as $user) {
-        //     // AddMailchimpSubscriber::dispatch(
-        //     //     $user['email'],
-        //     //     $user['first_name'],
-        //     //     $user['last_name']
-        //     // )->delay(now()->addSeconds(2)); // Optional delay
-        // }
-
-        // SendMailchimpCampaign::dispatch(
-        //     'March Newsletter',
-        //     'Surajit',
-        //     'skoly79@gmail.com',
-        //     '<h1>Hello!</h1><p>This is the April newsletter.</p>'
-        // )->delay(now()->addMinutes(1)); // Wait to ensure subscribers are added
-
-        $recipients = [
-            [
-                'email' => 'chansuro@gmail.com',
-                'first_name' => 'Surajit',
-                'last_name' => 'Koly',
-                'custom_subject' => $emailSubject,
-            ],
-            [
-                'email' => 'skoly06@gmail.com',
-                'first_name' => 'Surajit',
-                'last_name' => 'Koley',
-                'custom_subject' => $emailSubject,
-            ],
-        ];
     
         SendMailchimpBulkCampaignJob::dispatch($recipients,$emailMessage);
 
