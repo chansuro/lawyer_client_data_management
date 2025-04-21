@@ -37,9 +37,6 @@
                             WhatsApp
                           </th>
                           <th>
-                            Sent on
-                          </th>
-                          <th>
                             Created On
                           </th>
                           <th>
@@ -55,16 +52,19 @@
                           {{ $campaign->name }}
                           </td>
                           <td>
-                          {{ $campaign->sms }}
+                          @if($campaign->sms == 'Y')
+                            <a href="http://">Send</a>
+                          @endif
+                          </td>
+                          <td id="emailcampaigntd{{$campaign->id}}">
+                          @if($campaign->email == 'Y')
+                            <a href="javascript: void(0)" id="emailcampaign{{$campaign->id}}" class="sendemail" campaignId="{{$campaign->id}}">Send</a>
+                          @endif
                           </td>
                           <td>
-                          {{ $campaign->email }}
-                          </td>
-                          <td>
-                          {{ $campaign->whatsapp }}
-                          </td>
-                          <td>
-                          {{ $campaign->sent_on }}
+                          @if($campaign->whatsapp == 'Y')
+                            <a href="http://">Send</a>
+                          @endif
                           </td>
                           <td>
                           {{ $campaign->created_at }}
@@ -73,7 +73,9 @@
                           <a href="{{route('customer.campaignwise',['id'=> $campaign->id ])}}">
                             <i class="ti-user"></i>
                           </a>
-
+                          <a href="{{route('campaign.edit',['id'=>$campaign->id])}}" class="btn btn-transparent border-0 p-0 m-0">
+                                                        <i class="ti-pencil"></i> 
+                          </a>
                           <button type="button" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $campaign->id }}"
                           data-id="{{ $campaign->id }}" data-name="{{ $campaign->name }}" class="btn btn-transparent border-0 p-0 m-0">
                             <i class="ti-trash"></i>
@@ -131,5 +133,30 @@
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
-        
+        <script>
+        $('.sendemail').click(function () {
+          //alert($(this).attr('campaignId'));
+          var attrId = `#emailcampaign${$(this).attr('campaignId')}`;
+          var emailcampaigntd = `#emailcampaigntd${$(this).attr('campaignId')}`;
+          //alert(attrId)
+          $(attrId).text('Loading ...');
+            $.ajax({
+                url: "{{ route('email.send') }}", // Use named route
+                type: 'POST',
+                data: {
+                    campaignid: $(this).attr('campaignId')
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    console.log(response);
+                    $(emailcampaigntd).html(`<p class="text-success">Email sent. [${response.sent_date}]</p>`);
+                },
+                error: function (xhr) {
+                    $(emailcampaigntd).html('<p class="text-danger">Sending failed. Please try after sometime.</p>');
+                }
+            });
+        });
+    </script>
       <x-adminfooter />

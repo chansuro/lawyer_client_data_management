@@ -22,7 +22,13 @@ class Campaign extends Authenticatable
         'sms',
         'email',
         'whatsapp',
-        'sent_on'
+        'sent_on',
+        'sent_on_whatsapp',
+        'sent_on_email',
+        'email_campaign_id',
+        'email_template_id',
+        'sms_template_id',
+        'wp_template_id'
     ];
 
     /**

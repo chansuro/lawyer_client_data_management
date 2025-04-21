@@ -16,31 +16,27 @@
                           @endforeach
                       </ul>
                   @endif
-                  <h4 class="card-title">Add campaign </h4>
+                  <h4 class="card-title">Edit campaign </h4>
                   <p class="card-description">
-                    Please add campaign to send email, sms and whatsapp.
+                    Please edit campaign to send email, sms and whatsapp.
                   </p>
-                  <form class="forms-sample" method="post" action="{{ route('campaign.create') }}" enctype="multipart/form-data">
+                  <form class="forms-sample" method="post" action="{{ route('campaign.editaction') }}" enctype="multipart/form-data">
                   @csrf
                     <div class="form-group">
                       <label for="exampleInputCampaignname">Campaign name</label>
-                      <input type="text" class="form-control" name="name" id="exampleInputCampaignname" placeholder="Campaign name">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputConfirmPassword1">Upload excel data</label>
-                      <input type="file" class="form-control" name="uploadfile" accept="csv*">
+                      <input type="text" class="form-control" name="name" value="{{$campaign->name}}" id="exampleInputCampaignname" placeholder="Campaign name">
                     </div>
                     <div class="form-check">
                     <label class="mr-3">
-                      <input type="checkbox" name="email" value="Y" checked>
+                      <input type="checkbox" name="email" value="Y" @if($campaign->email == 'Y') checked @endif>
                       Email
                     </label>
                     <label class="mr-3">
-                      <input type="checkbox" name="sms" value="Y" checked>
+                      <input type="checkbox" name="sms" value="Y"  @if($campaign->sms == 'Y') checked @endif>
                       SMS
                     </label>
                     <label>
-                      <input type="checkbox" name="whatsapp" value="Y" checked>
+                      <input type="checkbox" name="whatsapp" value="Y"  @if($campaign->whatsapp == 'Y') checked @endif>
                       WhatsApp
                     </label>
                     </div>
@@ -49,7 +45,7 @@
                       <div class="col-sm-9">
                         <select class="form-control" name="email_template_id">
                           @foreach ($emailtemplates as $emailtemplate)
-                          <option value="{{$emailtemplate['id']}}">{{$emailtemplate['subject']}}</option>
+                          <option value="{{$emailtemplate['id']}}" @if($campaign->email_template_id == $emailtemplate['id']) selected="selected" @endif >{{$emailtemplate['subject']}}</option>
                           @endforeach
                         </select>
                       </div>
@@ -59,7 +55,7 @@
                       <div class="col-sm-9">
                         <select class="form-control" name="sms_template_id">
                           @foreach ($smstemplates as $smstemplate)
-                          <option value="{{$smstemplate['id']}}">{{$smstemplate['subject']}}</option>
+                          <option value="{{$smstemplate['id']}}" @if($campaign->sms_template_id == $smstemplate['id']) selected="selected" @endif>{{$smstemplate['subject']}}</option>
                           @endforeach
                         </select>
                       </div>
@@ -69,11 +65,12 @@
                       <div class="col-sm-9">
                         <select class="form-control" name="wp_template_id">
                         @foreach ($whatsapptemplates as $whatsapptemplate)
-                          <option value="{{$whatsapptemplate['id']}}">{{$whatsapptemplate['subject']}}</option>
+                          <option value="{{$whatsapptemplate['id']}}" @if($campaign->wp_template_id == $whatsapptemplate['id']) selected="selected" @endif>{{$whatsapptemplate['subject']}}</option>
                           @endforeach
                         </select>
                       </div>
                     </div>
+                    <input type="hidden" name="id" value="{{$campaign->id}}">
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
                     <a href="{{ route('campaign.get') }}" class="btn btn-light">Back</a>
                   </form>

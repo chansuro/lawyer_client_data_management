@@ -20,18 +20,11 @@ class TemplateController extends Controller
 
     public function create(Request $request){
         $input = $request->except('_token');
-        if($input['type'] == 'email'){
             $request->validate([
                 'type' => 'required',
                 'subject' => 'required',
                 'message' => 'required|string',
             ]);
-        }else{
-            $request->validate([
-                'type' => 'required',
-                'message' => 'required',
-            ]);
-        }
         
         $user = Template::create($input);
         return back()->with('success', 'Template added successfully.');

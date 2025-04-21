@@ -16,6 +16,7 @@ Route::get('/', function () {
 Route::get('/privacy', function () {
     return view('privacy');
 });
+Route::get('/download-pdf/{campaignid}/{customerid}', [CampaignController::class, 'downloadPDF']);
 Route::group(['prefix' => 'admin'],function(){
     Route::group(['middleware'=>'admin.guest'],function(){
         Route::get('login',[LoginController::class,'index'])->name('admin.login');
@@ -40,8 +41,10 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('gettemplate/edit', [TemplateController::class, 'edit'])->name('template.edittemplateaction');
         Route::get('getcampaign', [CampaignController::class, 'index'])->name('campaign.get');
         Route::get('addcampaign', [CampaignController::class, 'addacmpaign'])->name('campaign.add');
+        Route::get('editcampaign/{id}', [CampaignController::class, 'editcampaign'])->name('campaign.edit');
         Route::post('add-password', [UpdateProfileController::class, 'updatePassword'])->name('update.passwordaction');
         Route::post('add-campaign', [CampaignController::class, 'create'])->name('campaign.create');
+        Route::post('edit-campaign', [CampaignController::class, 'edit'])->name('campaign.editaction');
         Route::get('getcustomer', [CustomerController::class, 'index'])->name('customer.get');
         Route::post('getcustomer', [CustomerController::class, 'index'])->name('customer.search');
         Route::get('getcustomer/{id}', [CustomerController::class, 'campaignwise'])->name('customer.campaignwise');
