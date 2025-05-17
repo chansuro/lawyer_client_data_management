@@ -24,12 +24,10 @@
                   @csrf
                   <input type="hidden" name="type" value="{{ $type }}">
                   <input type="hidden" name="id" value="{{ $id }}">
-                  @if ($type == 'email')
                     <div class="form-group">
                       <label for="exampleInputPassword1">Subject</label>
                       <input type="text" class="form-control" name="subject" value="{{$template->subject}}" id="exampleInputSubject" placeholder="Subject">
                     </div>
-                  @endif
                     <div class="form-group">
                       <label for="exampleInputConfirmPassword1">Message</label>
                       <textarea name="message" id="exampleInputMessage" class="form-control">{{$template->message}}</textarea>

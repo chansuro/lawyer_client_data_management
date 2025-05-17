@@ -25,7 +25,7 @@ Route::group(['prefix' => 'admin'],function(){
         Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
         Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-        
+        Route::get('/mailchimp/webhook/{campaignId}', [CampaignController::class, 'handlemailchimpwebhook']);
     });
     Route::group(['middleware'=>'admin.auth'],function(){
         Route::get('dashboard',[AdminController::class,'index'])->name('admin.dashboard');
@@ -54,7 +54,6 @@ Route::group(['prefix' => 'admin'],function(){
         Route::get('/export-csv/{id}', [CustomerController::class, 'export'])->name('customer.export');
         Route::post('send-bulk-whatsapp', [CampaignController::class, 'sendBulk'])->name('test.twilio');
         Route::post('send-bulk-email', [CampaignController::class, 'sendBulkEmail'])->name('email.send');
-        
         Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
 });

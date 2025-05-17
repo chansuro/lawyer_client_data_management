@@ -57,13 +57,21 @@
                           @endif
                           </td>
                           <td id="emailcampaigntd{{$campaign->id}}">
-                          @if($campaign->email == 'Y')
+                          @if($campaign->email == 'Y' && $campaign->sent_on_email == null)
                             <a href="javascript: void(0)" id="emailcampaign{{$campaign->id}}" class="sendemail" campaignId="{{$campaign->id}}">Send</a>
+                          @elseif($campaign->email == 'Y' && $campaign->sent_on_email != null)
+                          {{ \Carbon\Carbon::parse($campaign->sent_on_email)->format('d-M-Y')}}
+                          @else
+                          
                           @endif
                           </td>
-                          <td>
-                          @if($campaign->whatsapp == 'Y')
-                            <a href="http://">Send</a>
+                          <td id="wpcampaigntd{{$campaign->id}}">
+                          @if($campaign->whatsapp == 'Y' && $campaign->sent_on_whatsapp == null)
+                          <a href="javascript: void(0)" id="wpcampaign{{$campaign->id}}" class="sendwp" campaignId="{{$campaign->id}}">Send</a>
+                          @elseif($campaign->whatsapp == 'Y' && $campaign->sent_on_whatsapp != null)
+                          {{ \Carbon\Carbon::parse($campaign->sent_on_whatsapp)->format('d-M-Y')}}
+                          @else
+                          
                           @endif
                           </td>
                           <td>
@@ -135,10 +143,8 @@
         <!-- partial:../../partials/_footer.html -->
         <script>
         $('.sendemail').click(function () {
-          //alert($(this).attr('campaignId'));
           var attrId = `#emailcampaign${$(this).attr('campaignId')}`;
           var emailcampaigntd = `#emailcampaigntd${$(this).attr('campaignId')}`;
-          //alert(attrId)
           $(attrId).text('Loading ...');
             $.ajax({
                 url: "{{ route('email.send') }}", // Use named route
@@ -150,7 +156,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
-                    console.log(response);
                     $(emailcampaigntd).html(`<p class="text-success">Email sent. [${response.sent_date}]</p>`);
                 },
                 error: function (xhr) {
@@ -158,5 +163,30 @@
                 }
             });
         });
+        $('.sendwp').click(function () {
+          //alert($(this).attr('campaignId'));
+          var attrId = `#wpcampaign${$(this).attr('campaignId')}`;
+          var wpcampaigntd = `#wpcampaigntd${$(this).attr('campaignId')}`;
+          //alert(attrId)
+          $(attrId).text('Loading ...');
+            $.ajax({
+                url: "{{ route('test.twilio') }}", // Use named route
+                type: 'POST',
+                data: {
+                    campaignid: $(this).attr('campaignId')
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    console.log(response);
+                    $(wpcampaigntd).html(`<p class="text-success">Email sent. [${response.sent_date}]</p>`);
+                },
+                error: function (xhr) {
+                    $(wpcampaigntd).html('<p class="text-danger">Sending failed. Please try after sometime.</p>');
+                }
+            });
+        });
+        
     </script>
       <x-adminfooter />

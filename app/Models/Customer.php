@@ -29,7 +29,8 @@ class Customer extends Model
         'address',
         'notice_date',
         'email',
-        'campaign_id'
+        'campaign_id',
+        'phone'
     ];
 
     /**

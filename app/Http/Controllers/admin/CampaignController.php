@@ -15,6 +15,8 @@ use App\Jobs\SendMailchimpCampaign;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\SendMailchimpBulkCampaignJob;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class CampaignController extends Controller
 {
@@ -54,7 +56,6 @@ class CampaignController extends Controller
          // Open and read the CSV
          if (($handle = fopen($file->getRealPath(), 'r')) !== false) {
             $header = fgetcsv($handle); // Read the header row
-
             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
                 // Map each row to header
                 $dataRaw = array_combine($header, $row);
@@ -69,6 +70,7 @@ class CampaignController extends Controller
                 $data['address'] = $dataRaw['ADDRESS'];
                 $data['notice_date'] = Carbon::createFromFormat('d.m.Y', $dataRaw['NOTICE_DATE'])->format('Y-m-d');
                 $data['email'] = strtolower($dataRaw['EMAIL_ID']);
+                $data['phone'] = strtolower($dataRaw['PHONE']);
                 $data['campaign_id'] = $insertedId;
                 Customer::create($data);
 
@@ -86,8 +88,9 @@ class CampaignController extends Controller
         Campaign::where('id', $id)->delete();
         return back()->with('success', 'Campaign deleted successfully!');
     }
-    // send bulk whatsapp
-    public function sendBulk(Request $request, TwilioWhatsAppService $whatsapp)
+    // send bulk whatsapp via twilio
+    //public function sendBulk(Request $request, TwilioWhatsAppService $whatsapp)
+    public function sendBulk(Request $request)
     {
         // $numbers = $request->input('numbers'); // array of raw numbers like ['+1234567890']
         // $message = $request->input('message');
@@ -106,17 +109,52 @@ class CampaignController extends Controller
         //     'status' => 'complete',
         //     'results' => $results
         // ]);
-        $recipients = [
-            '+919874386721'
-        ];
 
-        $message = '🔥 Hello! This is a bulk WhatsApp message via Laravel & Twilio.';
+
+        // --- twilio settings
+        // $recipients = [
+        //     '+919874386721'
+        // ];
+
+        // $message = '🔥 Hello! This is a bulk WhatsApp message via Laravel & Twilio.';
         
-        foreach ($recipients as $contact) {
-            SendWhatsAppMessage::dispatch($contact, $message);
+        // foreach ($recipients as $contact) {
+        //     SendWhatsAppMessage::dispatch($contact, $message);
+        // }
+        // --- twilio settings
+
+        $input = $request->except('_token');
+        $campaign = Campaign::where('id',$input['campaignid'])->first();
+
+        $whatsapptemplateId = $campaign->wp_template_id;        ;
+        $templateDetails = Template::where('id',$whatsapptemplateId)->first();
+        $whatsappSubject = $templateDetails->subject;
+        $wildCards = config('app.TEMPLATE_WILDCARDS');
+        $getCustomers = Customer::where('campaign_id',$input['campaignid'])->get();
+        
+        foreach($getCustomers as $value){
+            $recipientsData = [];
+            $whatsappMessage = $templateDetails->message;
+            foreach($wildCards as $k=>$v){
+                if(Str::contains($whatsappMessage, $v)){
+                    if($v == '[NAME]'){
+                        $recipientsData[] = ['type' => 'text', 'text' => $value->name];
+                    }elseif($v == '[EMAIL]'){
+                        $recipientsData[] =  ['type' => 'text', 'text' => $value->email];
+                    }elseif($v == '[PHONE]'){
+                        $recipientsData[] = ['type' => 'text', 'text' => $value->phone];
+                    }elseif($v == '[ADDRESS]'){
+                        $recipientsData[] = ['type' => 'text', 'text' => $value->address];
+                    }
+                }
+            }
+            $phone = $value->phone;
+            $phone = str_replace('+91','',$phone);
+            $phone = '91'.$phone;
+            SendWhatsAppMessage::dispatch($phone, $whatsappMessage,$recipientsData);
         }
     
-        return response()->json(['status' => 'queued', 'count' => count($recipients)]);
+        return response()->json(['status' => 'queued', 'count' => []]);
     }
 
     public function sendBulkEmail(Request $request){
@@ -124,14 +162,13 @@ class CampaignController extends Controller
         $campaign = Campaign::where('id',$input['campaignid'])->first();
         $emailtemplateId = $campaign->email_template_id;        ;
         $templateDetails = Template::where('id',$emailtemplateId)->first();
-        $emailSubject = $templateDetails->subject;
-        $emailMessage = $templateDetails->message;
+        
         $wildCards = config('app.TEMPLATE_WILDCARDS');
         $getCustomers = Customer::where('campaign_id',$input['campaignid'])->get();
         $recipients = [];
         foreach($getCustomers as $value){
-            ///// nnedd to update
-            $value->email = 'chansuro@gmail.com';
+            $emailSubject = $templateDetails->subject;
+            $emailMessage = $templateDetails->message;
             foreach($wildCards as $k=>$v){
                 if($v == '[NAME]'){
                     $emailSubject = str_replace($v, $value->name,$emailSubject);
@@ -140,7 +177,7 @@ class CampaignController extends Controller
                     $emailSubject = str_replace($v, $value->email,$emailSubject);
                     $emailMessage = str_replace($v, '*|EMAIL|*',$emailMessage);
                 }elseif($v == '[PHONE]'){
-                    $emailSubject = str_replace($v, '*|PHONE|*',$emailSubject);
+                    $emailSubject = str_replace($v, $value->phone,$emailSubject);
                     $emailMessage = str_replace($v, '*|PHONE|*',$emailMessage);
                 }elseif($v == '[ADDRESS]'){
                     $emailSubject = str_replace($v, $value->address,$emailSubject);
@@ -155,7 +192,7 @@ class CampaignController extends Controller
             ];
         }
     
-        SendMailchimpBulkCampaignJob::dispatch($recipients,$emailMessage);
+        SendMailchimpBulkCampaignJob::dispatch($recipients,$emailMessage,$input['campaignid']);
 
         $nowtime = Carbon::now();
         $campaignInput = ['sent_on_email'=>$nowtime];
@@ -192,10 +229,23 @@ class CampaignController extends Controller
         return back()->with('success', 'Campaign updated successfully!');
     }
 
-    public function downloadPDF()
-    {
-        $data = [ 'title' => 'Welcome to Laravel PDF!' ]; // Pass your data
-        $pdf = Pdf::loadView('Dashboard.whatsapp', $data); // Your Blade view
-        return $pdf->stream('invoice.pdf'); // This opens in browser
+    public function handlemailchimpwebhook($campaignId){
+        $serverPrefix = config('services.mailchimp.server_prefix');
+        $apiKey = config('services.mailchimp.key');
+        $getUrl ='https://'.$serverPrefix.'.api.mailchimp.com/3.0/reports/'.$campaignId.'/email-activity';
+        $response = Http::withBasicAuth('anystring', $apiKey)
+        ->get($getUrl);
+        
+        if ($response->successful()) {
+            $returnArr = json_decode($response, true);
+            print '<pre>';
+            print_r($returnArr['emails']);
+            die;
+        }
+    
+        return response()->json([
+            'status' => 'error',
+            'message' => $response->body(),
+        ], $response->status());
     }
 }

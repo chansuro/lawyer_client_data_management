@@ -58,6 +58,9 @@
                             Account No
                           </th>
                           <th>
+                            Phone
+                          </th>
+                          <th>
                             Action
                           </th>
 
@@ -86,6 +89,9 @@
                           {{ $customer->account_no }}
                           </td>
                           <td>
+                          {{ $customer->phone }}
+                          </td>
+                          <td>
                           <button type="button" data-bs-toggle="modal" data-bs-target="#userModal{{ $customer->id }}" class="btn btn-transparent border-0 p-0 m-0" style="background: none;">
                           <i class="ti-user"></i>
                           </button>
@@ -108,6 +114,10 @@
                               <div class="row">
                                 <div class="col-md-3">Email</div>
                                 <div class="col-md-9">{{ $customer->email }}</div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3">Phone</div>
+                                <div class="col-md-9">{{ $customer->phone }}</div>
                               </div>
                               <div class="row">
                                 <div class="col-md-3">Ref No.</div>

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('campaigns', function (Blueprint $table) {
             //
-            $table->integer('email_campaign_id')->nullable();
+            $table->string('email_campaign_id')->nullable();
             $table->integer('email_template_id')->nullable();
             $table->integer('sms_template_id')->nullable();
             $table->integer('wp_template_id')->nullable();

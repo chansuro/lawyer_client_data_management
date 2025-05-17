@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>K & B Legal Associates</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -30,10 +30,10 @@
                 <nav class="flex items-center justify-end gap-4">
                         
                         <a
-                            href="{{route('admin.login')}}"
+                            href="/"
                             class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal"
                         >
-                            Log in
+                            Home
                         </a>
 
                            
@@ -79,13 +79,14 @@
     <h4 class="mt-4">8. Contact Us</h4>
     <p>
       <strong>K & B LEGAL ASSOCIATES</strong><br>
+      Krishanu Poddar
       Room no 601 & 602<br>
       Premises No 1B, 6th Floor,<br>
         Nicco House, 2 Hare Street,<br> 
         Near Banksal Court<br>
         Kolkata - 700001<br>
-      [+918902107459]<br>
-      [kblegalassociates10@gmail.com]<br>
+      [+918337099089 / +917686990918 / +918902107459]<br>
+      [legal@kblegalassociates.com]<br>
       [http://kblegalassociates.com]
     </p>
 

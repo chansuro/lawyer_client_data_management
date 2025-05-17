@@ -9,6 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use MailchimpMarketing\ApiClient;
 use Illuminate\Support\Facades\Log;
+use App\Models\Campaign;
 
 class SendMailchimpBulkCampaignJob implements ShouldQueue
 {
@@ -16,6 +17,7 @@ class SendMailchimpBulkCampaignJob implements ShouldQueue
 
     protected array $recipients;
     protected $htmlString;
+    protected $dbCampaignId;
 
     protected $htmlTemplate = '<!DOCTYPE html>
 <html>
@@ -76,11 +78,12 @@ class SendMailchimpBulkCampaignJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(array $recipients,string $html)
+    public function __construct(array $recipients,string $html, string $dbCampaignId)
     {
         //
         $this->recipients = $recipients;
         $this->htmlString = $html;
+        $this->dbCampaignId = $dbCampaignId;
     }
 
     /**
@@ -131,12 +134,12 @@ class SendMailchimpBulkCampaignJob implements ShouldQueue
                 'reply_to' => '	kblegalassociates10@gmail.com',
             ],
         ]);
-        //Log::info('Created campaign ID:', ['id' => $campaign->id]);
-        $htmlMessage = str_replace('[CONTENT]',$this->htmlString,$this->htmlTemplate);
-        $htmlMessage = str_replace('[YEAR]',date('Y'),$this->htmlTemplate);
+        Campaign::where('id',$this->dbCampaignId)->update(['email_campaign_id'=>$campaign->id]);
+        $this->htmlTemplate = str_replace('[CONTENT]',$this->htmlString,$this->htmlTemplate);
+        $this->htmlTemplate = str_replace('[YEAR]',date('Y'),$this->htmlTemplate);
         // Step 3: Set campaign content using merge tags
         $mailchimp->campaigns->setContent($campaign->id, [
-            'html' => $htmlMessage,
+            'html' => $this->htmlTemplate,
         ]);
 
         // Step 4: Send campaign

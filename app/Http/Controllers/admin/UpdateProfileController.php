@@ -43,7 +43,7 @@ class UpdateProfileController extends Controller
     public function updateprofile(){
         $user = Auth::guard('admin')->user();
         $userDetails = User::where('id',$user->id)->where('role','admin')->first();
-        return view('Dashboard.updateprofile',['name'=>$userDetails->name,'email'=>$userDetails->email]);
+        return view('Dashboard.updateprofile',['name'=>$userDetails->name,'email'=>$userDetails->email,'email_from'=>$userDetails->email_from,'whatsapp_from'=>$userDetails->whatsapp_from,'sms_from'=>$userDetails->sms_from]);
     }
 
     public function updateProfileAction(Request $request)

@@ -34,12 +34,24 @@
                   <form class="forms-sample" method="post" action="{{ route('update.profile') }}">
                   @csrf
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Full Name</label>
-                      <input type="text" class="form-control" name="name" value="{{ $name }}" id="exampleInputOldPassword1" placeholder="Full Name">
+                      <label for="exampleFullName">Full Name</label>
+                      <input type="text" class="form-control" name="name" value="{{ $name }}" id="exampleFullName" placeholder="Full Name">
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Email</label>
+                      <label for="exampleInputEmail">Email</label>
                       <input type="text" class="form-control" name="email" value="{{ $email }}" id="exampleInputEmail" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmailfrom">Email from</label>
+                      <input type="text" class="form-control" name="email_from" value="{{ $email_from }}" id="exampleInputEmailfrom" placeholder="Email from">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputSMSfrom">SMS from</label>
+                      <input type="text" class="form-control" name="sms_from" value="{{ $sms_from }}" id="exampleInputSMSfrom" placeholder="SMS from">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputWhatsappfrom">WhatsApp from</label>
+                      <input type="text" class="form-control" name="whatsapp_from" value="{{ $whatsapp_from }}" id="exampleInputWhatsappfrom" placeholder="WhatsApp from">
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
                   </form>

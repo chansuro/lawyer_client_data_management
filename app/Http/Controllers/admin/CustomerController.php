@@ -12,7 +12,7 @@ class CustomerController extends Controller
     //
     public function index(Request $request){
         $input = $request->except('_token');
-        $query = Customer::selectRaw("id,name,ref_no,card_no,aan_no,account_no,amount,date_filing,reason,address,notice_date,email,campaign_id,created_at");
+        $query = Customer::selectRaw("id,name,ref_no,card_no,aan_no,account_no,amount,date_filing,reason,address,notice_date,email,campaign_id,created_at,phone");
         $query->when((isset($input['search'])), function ($query) use ($input) {
             $query->where('name','like','%'.$input['search'].'%')
                     ->orWhere('ref_no',$input['search'])
@@ -26,7 +26,7 @@ class CustomerController extends Controller
     }
     public function campaignwise($campaignId,Request $request){
         $input = $request->except('_token');
-        $query = Customer::selectRaw("id,name,ref_no,card_no,aan_no,account_no,amount,date_filing,reason,address,notice_date,email,campaign_id,created_at")->where('campaign_id',$campaignId);
+        $query = Customer::selectRaw("id,name,ref_no,card_no,aan_no,account_no,amount,date_filing,reason,address,notice_date,email,campaign_id,created_at,phone")->where('campaign_id',$campaignId);
         $query->when((isset($input['search'])), function ($query) use ($input) {
             $query->where('name','like','%'.$input['search'].'%')
                     ->orWhere('ref_no',$input['search'])

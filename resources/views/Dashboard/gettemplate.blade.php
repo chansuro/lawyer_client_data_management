@@ -33,7 +33,7 @@
                           {{ $template->subject }}
                           </td>
                           <td>
-                          {{ $template->message }}
+                          {{ Str::substr($template->message,0,100) }} ...
                           </td>
                           <td>
                           {{ $template->created_at }}

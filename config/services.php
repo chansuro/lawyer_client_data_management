@@ -45,5 +45,9 @@ return [
         'audience_id' => env('MAILCHIMP_AUDIENCE_ID'),
         'list_id' => env('MAILCHIMP_LIST_ID'),
     ],
+    'whatsapp' => [
+    'token' => env('WHATSAPP_TOKEN'),
+    'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
+],
 
 ];
