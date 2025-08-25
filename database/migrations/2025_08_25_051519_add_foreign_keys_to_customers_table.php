@@ -11,14 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('campaigns', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('sms');
-            $table->string('email');
-            $table->string('whatsapp');
-            $table->date('sent_on')->nullable();
-            $table->timestamps();
+        Schema::table('customers', function (Blueprint $table) {
+            $table->foreign(['campaign_id'])->references(['id'])->on('campaigns')->onUpdate('no action')->onDelete('cascade');
         });
     }
 
@@ -27,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campaigns');
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropForeign('customers_campaign_id_foreign');
+        });
     }
 };

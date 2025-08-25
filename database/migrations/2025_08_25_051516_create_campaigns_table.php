@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('campaigns', function (Blueprint $table) {
-            //
+        Schema::create('campaigns', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('sms');
+            $table->string('email');
+            $table->string('whatsapp');
+            $table->date('sent_on')->nullable();
+            $table->timestamps();
+            $table->date('sent_on_whatsapp')->nullable();
+            $table->date('sent_on_email')->nullable();
             $table->string('email_campaign_id')->nullable();
             $table->integer('email_template_id')->nullable();
             $table->integer('sms_template_id')->nullable();
@@ -25,12 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('campaigns', function (Blueprint $table) {
-            //
-            $table->dropColumn('email_campaign_id');
-            $table->dropColumn('email_template_id');
-            $table->dropColumn('sms_template_id');
-            $table->dropColumn('wp_template_id');
-        });
+        Schema::dropIfExists('campaigns');
     }
 };

@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->string('avatar')->nullable()->after('email'); // Add new column
+        Schema::create('templates', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('type');
+            $table->string('subject')->nullable();
+            $table->text('message');
+            $table->timestamps();
         });
     }
 
@@ -22,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->dropColumn('avatar'); // Rollback the change
-        });
+        Schema::dropIfExists('templates');
     }
 };

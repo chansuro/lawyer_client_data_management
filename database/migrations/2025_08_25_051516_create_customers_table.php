@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->string('ref_no');
             $table->string('card_no');
@@ -24,8 +24,11 @@ return new class extends Migration
             $table->string('address');
             $table->date('notice_date');
             $table->string('email');
-            $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('campaign_id')->index('customers_campaign_id_foreign');
             $table->timestamps();
+            $table->string('phone')->nullable();
+            $table->string('message_id')->nullable();
+            $table->string('email_status', 45)->nullable()->default('Pending');
         });
     }
 
