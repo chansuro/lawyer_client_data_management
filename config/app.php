@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://example.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,6 +122,6 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-    'TEMPLATE_WILDCARDS' => ['[NAME]','[EMAIL]','[PHONE]','[ADDRESS]']
+    'TEMPLATE_WILDCARDS' => ['[NAME]','[EMAIL]','[PHONE]','[ADDRESS]','[REF_NO]','[CARD_NO]','[AAN_NO]','[ACCOUNT_NO]','[AMOUNT]','[FILING_DATE]','[NOTICE_DATE]','[CURRENT_DATE]','[DISHONOUR_REASON]']
 
 ];

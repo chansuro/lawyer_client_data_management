@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\admin\TemplateController;
 use App\Http\Controllers\admin\CampaignController;
 use App\Http\Controllers\admin\CustomerController;
+use App\Mail\MailgunMail;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,7 +18,12 @@ Route::get('/', function () {
 Route::get('/privacy', function () {
     return view('privacy');
 });
-Route::get('/download-pdf/{campaignid}/{customerid}', [CampaignController::class, 'downloadPDF']);
+
+Route::get('/getwpstatus', function () {
+    return view('privacy');
+});
+Route::get('/download-pdf-whatsapp/{campaignid}/{customerid}', [CampaignController::class, 'downloadPDF']);
+Route::get('/download-pdf-email/{campaignid}/{customerid}', [CampaignController::class, 'downloadPDFEmail']);
 Route::group(['prefix' => 'admin'],function(){
     Route::group(['middleware'=>'admin.guest'],function(){
         Route::get('login',[LoginController::class,'index'])->name('admin.login');

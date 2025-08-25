@@ -8,13 +8,13 @@ use App\Models\Campaign;
 use App\Models\Template;
 use App\Models\Customer;
 use Carbon\Carbon;
-use App\Services\TwilioWhatsAppService;
+//use App\Services\TwilioWhatsAppService;
 use App\Jobs\SendWhatsAppMessage;
-use App\Jobs\AddMailchimpSubscriber;
-use App\Jobs\SendMailchimpCampaign;
+//use App\Jobs\AddMailchimpSubscriber;
+//use App\Jobs\SendMailchimpCampaign;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\SendMailchimpBulkCampaignJob;
+use App\Jobs\SendEmailMailgun;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -150,53 +150,150 @@ class CampaignController extends Controller
             }
             $phone = $value->phone;
             $phone = str_replace('+91','',$phone);
-            $phone = '91'.$phone;
+            $phone = '+91'.$phone;
             SendWhatsAppMessage::dispatch($phone, $whatsappMessage,$recipientsData);
         }
     
         return response()->json(['status' => 'queued', 'count' => []]);
     }
 
+    // public function sendBulkEmail(Request $request){
+    //     $input = $request->except('_token');
+    //     $campaign = Campaign::where('id',$input['campaignid'])->first();
+    //     $emailtemplateId = $campaign->email_template_id;        ;
+    //     $templateDetails = Template::where('id',$emailtemplateId)->first();
+        
+    //     $wildCards = config('app.TEMPLATE_WILDCARDS');
+    //     $getCustomers = Customer::where('campaign_id',$input['campaignid'])->whereNull('message_id')->get();
+    //     $recipients = [];
+    //     foreach($getCustomers as $value){
+    //         $emailSubject = $templateDetails->subject;
+    //         $emailMessage = $templateDetails->message;
+    //         foreach($wildCards as $k=>$v){
+    //             if($v == '[NAME]'){
+    //                 $emailSubject = str_replace($v, $value->name,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->name,$emailMessage);
+    //             }elseif($v == '[EMAIL]'){
+    //                 $emailSubject = str_replace($v, $value->email,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->email,$emailMessage);
+    //             }elseif($v == '[PHONE]'){
+    //                 $emailSubject = str_replace($v, $value->phone,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->phone,$emailMessage);
+    //             }elseif($v == '[ADDRESS]'){
+    //                 $emailSubject = str_replace($v, $value->address,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->address,$emailMessage);
+    //             }elseif($v == '[REF_NO]'){
+    //                 $emailSubject = str_replace($v, $value->ref_no,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->ref_no,$emailMessage);
+    //             }elseif($v == '[CARD_NO]'){
+    //                 $emailSubject = str_replace($v, $value->card_no,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->card_no,$emailMessage);
+    //             }elseif($v == '[AAN_NO]'){
+    //                 $emailSubject = str_replace($v, $value->aan_no,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->aan_no,$emailMessage);
+    //             }elseif($v == '[ACCOUNT_NO]'){
+    //                 $emailSubject = str_replace($v, $value->account_no,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->account_no,$emailMessage);
+    //             }elseif($v == '[AMOUNT]'){
+    //                 $emailSubject = str_replace($v, $value->amount,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->amount,$emailMessage);
+    //             }elseif($v == '[FILING_DATE]'){
+    //                 $emailSubject = str_replace($v, Carbon::parse($value->date_filing)->format('F j, Y'),$emailSubject);
+    //                 $emailMessage = str_replace($v, Carbon::parse($value->date_filing)->format('F j, Y'),$emailMessage);
+    //             }elseif($v == '[NOTICE_DATE]'){
+    //                 $emailSubject = str_replace($v, Carbon::parse($value->notice_date)->format('F j, Y'),$emailSubject);
+    //                 $emailMessage = str_replace($v, Carbon::parse($value->notice_date)->format('F j, Y'),$emailMessage);
+    //             }elseif($v == '[CURRENT_DATE]'){
+    //                 $emailSubject = str_replace($v, Carbon::now()->format('F j, Y'),$emailSubject);
+    //                 $emailMessage = str_replace($v, Carbon::now()->format('F j, Y'),$emailMessage);
+    //             }elseif($v == '[DISHONOUR_REASON]'){
+    //                 $emailSubject = str_replace($v, $value->reason,$emailSubject);
+    //                 $emailMessage = str_replace($v, $value->reason,$emailMessage);
+    //             }
+    //         }
+    //         $recipients[] = [
+    //             'id'=>$value->id,
+    //             'email' => $value->email,
+    //             'custom_subject' => $emailSubject,
+    //             'custom_message' => $emailMessage,
+    //         ];
+    //     }
+    //     SendEmailMailgun::dispatch($recipients,$emailMessage,$input['campaignid']);
+    //     //SendMailchimpBulkCampaignJob::dispatch($recipients,$emailMessage,$input['campaignid']);
+
+    //     $nowtime = Carbon::now();
+    //     $campaignInput = ['sent_on_email'=>$nowtime];
+    //     Campaign::where('id',$input['campaignid'])->update($campaignInput);
+    //     return response()->json(['message' => 'Email scheduled', 'campaignId'=>$input['campaignid'],'sent_date'=>$nowtime->format('d-M-Y'),'template'=>$wildCards]);
+    // }
+
     public function sendBulkEmail(Request $request){
         $input = $request->except('_token');
         $campaign = Campaign::where('id',$input['campaignid'])->first();
         $emailtemplateId = $campaign->email_template_id;        ;
         $templateDetails = Template::where('id',$emailtemplateId)->first();
+        $campaignId = $input['campaignid'];
         
         $wildCards = config('app.TEMPLATE_WILDCARDS');
-        $getCustomers = Customer::where('campaign_id',$input['campaignid'])->get();
-        $recipients = [];
-        foreach($getCustomers as $value){
-            $emailSubject = $templateDetails->subject;
-            $emailMessage = $templateDetails->message;
-            foreach($wildCards as $k=>$v){
-                if($v == '[NAME]'){
-                    $emailSubject = str_replace($v, $value->name,$emailSubject);
-                    $emailMessage = str_replace($v, '*|FNAME|*',$emailMessage);
-                }elseif($v == '[EMAIL]'){
-                    $emailSubject = str_replace($v, $value->email,$emailSubject);
-                    $emailMessage = str_replace($v, '*|EMAIL|*',$emailMessage);
-                }elseif($v == '[PHONE]'){
-                    $emailSubject = str_replace($v, $value->phone,$emailSubject);
-                    $emailMessage = str_replace($v, '*|PHONE|*',$emailMessage);
-                }elseif($v == '[ADDRESS]'){
-                    $emailSubject = str_replace($v, $value->address,$emailSubject);
-                    $emailMessage = str_replace($v, '*|ADDRESS|*',$emailMessage);
+        $getCustomers = Customer::where('campaign_id',$input['campaignid'])->where('email_status','Pending')->chunk(50,function ($users) use ($templateDetails,$wildCards,$campaignId) {
+            foreach ($users as $value) {
+                $recipients = [];
+                $emailSubject = $templateDetails->subject;
+                $emailMessage = $templateDetails->message;
+                foreach($wildCards as $k=>$v){
+                    if($v == '[NAME]'){
+                        $emailSubject = str_replace($v, $value->name,$emailSubject);
+                        $emailMessage = str_replace($v, $value->name,$emailMessage);
+                    }elseif($v == '[EMAIL]'){
+                        $emailSubject = str_replace($v, $value->email,$emailSubject);
+                        $emailMessage = str_replace($v, $value->email,$emailMessage);
+                    }elseif($v == '[PHONE]'){
+                        $emailSubject = str_replace($v, $value->phone,$emailSubject);
+                        $emailMessage = str_replace($v, $value->phone,$emailMessage);
+                    }elseif($v == '[ADDRESS]'){
+                        $emailSubject = str_replace($v, $value->address,$emailSubject);
+                        $emailMessage = str_replace($v, $value->address,$emailMessage);
+                    }elseif($v == '[REF_NO]'){
+                        $emailSubject = str_replace($v, $value->ref_no,$emailSubject);
+                        $emailMessage = str_replace($v, $value->ref_no,$emailMessage);
+                    }elseif($v == '[CARD_NO]'){
+                        $emailSubject = str_replace($v, $value->card_no,$emailSubject);
+                        $emailMessage = str_replace($v, $value->card_no,$emailMessage);
+                    }elseif($v == '[AAN_NO]'){
+                        $emailSubject = str_replace($v, $value->aan_no,$emailSubject);
+                        $emailMessage = str_replace($v, $value->aan_no,$emailMessage);
+                    }elseif($v == '[ACCOUNT_NO]'){
+                        $emailSubject = str_replace($v, $value->account_no,$emailSubject);
+                        $emailMessage = str_replace($v, $value->account_no,$emailMessage);
+                    }elseif($v == '[AMOUNT]'){
+                        $emailSubject = str_replace($v, $value->amount,$emailSubject);
+                        $emailMessage = str_replace($v, $value->amount,$emailMessage);
+                    }elseif($v == '[FILING_DATE]'){
+                        $emailSubject = str_replace($v, Carbon::parse($value->date_filing)->format('F j, Y'),$emailSubject);
+                        $emailMessage = str_replace($v, Carbon::parse($value->date_filing)->format('F j, Y'),$emailMessage);
+                    }elseif($v == '[NOTICE_DATE]'){
+                        $emailSubject = str_replace($v, Carbon::parse($value->notice_date)->format('F j, Y'),$emailSubject);
+                        $emailMessage = str_replace($v, Carbon::parse($value->notice_date)->format('F j, Y'),$emailMessage);
+                    }elseif($v == '[CURRENT_DATE]'){
+                        $emailSubject = str_replace($v, Carbon::now()->format('F j, Y'),$emailSubject);
+                        $emailMessage = str_replace($v, Carbon::now()->format('F j, Y'),$emailMessage);
+                    }elseif($v == '[DISHONOUR_REASON]'){
+                        $emailSubject = str_replace($v, $value->reason,$emailSubject);
+                        $emailMessage = str_replace($v, $value->reason,$emailMessage);
+                    }
                 }
+                $recipients[] = [
+                    'id'=>$value->id,
+                    'email' => $value->email,
+                    'custom_subject' => $emailSubject,
+                    'custom_message' => $emailMessage,
+                ];
+                SendEmailMailgun::dispatch($recipients,$emailMessage,$campaignId)->onQueue('emails')->delay(now()->addSeconds(rand(1, 5)));
             }
-            $recipients[] = [
-                'email' => $value->email,
-                'first_name' => $value->name,
-                'last_name' => '',
-                'custom_subject' => $emailSubject,
-            ];
-        }
-    
-        SendMailchimpBulkCampaignJob::dispatch($recipients,$emailMessage,$input['campaignid']);
-
+        });
         $nowtime = Carbon::now();
         $campaignInput = ['sent_on_email'=>$nowtime];
-        Campaign::where('id',$input['campaignid'])->update($campaignInput);
+        //Campaign::where('id',$input['campaignid'])->update($campaignInput);
         return response()->json(['message' => 'Email scheduled', 'campaignId'=>$input['campaignid'],'sent_date'=>$nowtime->format('d-M-Y'),'template'=>$wildCards]);
     }
 
@@ -247,5 +344,70 @@ class CampaignController extends Controller
             'status' => 'error',
             'message' => $response->body(),
         ], $response->status());
+    }
+
+    public function downloadPDF()
+    {
+        $data = [ 'title' => 'Welcome to Laravel PDF!' ]; // Pass your data
+        $pdf = Pdf::loadView('Dashboard.whatsapp', $data); // Your Blade view
+        return $pdf->stream('invoice.pdf'); // This opens in browser
+    }
+    public function downloadPDFEmail($campaignId,$customerId)
+    {
+        $campaign = Campaign::where('id',$campaignId)->first();
+        $emailtemplateId = $campaign->email_template_id;        ;
+        $templateDetails = Template::where('id',$emailtemplateId)->first();
+        
+        $wildCards = config('app.TEMPLATE_WILDCARDS');
+        $getCustomers = Customer::where('id',$customerId)->first();
+        $emailSubject = $templateDetails->subject;
+        $emailMessage = $templateDetails->message;
+        foreach($wildCards as $k=>$v){
+            if($v == '[NAME]'){
+                $emailSubject = str_replace($v, $getCustomers->name,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->name,$emailMessage);
+            }elseif($v == '[EMAIL]'){
+                $emailSubject = str_replace($v, $getCustomers->email,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->email,$emailMessage);
+            }elseif($v == '[PHONE]'){
+                $emailSubject = str_replace($v, $getCustomers->phone,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->phone,$emailMessage);
+            }elseif($v == '[ADDRESS]'){
+                $emailSubject = str_replace($v, $getCustomers->address,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->address,$emailMessage);
+            }elseif($v == '[REF_NO]'){
+                $emailSubject = str_replace($v, $getCustomers->ref_no,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->ref_no,$emailMessage);
+            }elseif($v == '[CARD_NO]'){
+                $emailSubject = str_replace($v, $getCustomers->card_no,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->card_no,$emailMessage);
+            }elseif($v == '[AAN_NO]'){
+                $emailSubject = str_replace($v, $getCustomers->aan_no,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->aan_no,$emailMessage);
+            }elseif($v == '[ACCOUNT_NO]'){
+                $emailSubject = str_replace($v, $getCustomers->account_no,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->account_no,$emailMessage);
+            }elseif($v == '[AMOUNT]'){
+                $emailSubject = str_replace($v, $getCustomers->amount,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->amount,$emailMessage);
+            }elseif($v == '[FILING_DATE]'){
+                $emailSubject = str_replace($v, Carbon::parse($getCustomers->date_filing)->format('F j, Y'),$emailSubject);
+                $emailMessage = str_replace($v, Carbon::parse($getCustomers->date_filing)->format('F j, Y'),$emailMessage);
+            }elseif($v == '[NOTICE_DATE]'){
+                $emailSubject = str_replace($v, Carbon::parse($getCustomers->notice_date)->format('F j, Y'),$emailSubject);
+                $emailMessage = str_replace($v, Carbon::parse($getCustomers->notice_date)->format('F j, Y'),$emailMessage);
+            }elseif($v == '[CURRENT_DATE]'){
+                $emailSubject = str_replace($v, Carbon::now()->format('F j, Y'),$emailSubject);
+                $emailMessage = str_replace($v, Carbon::now()->format('F j, Y'),$emailMessage);
+            }elseif($v == '[DISHONOUR_REASON]'){
+                $emailSubject = str_replace($v, $getCustomers->reason,$emailSubject);
+                $emailMessage = str_replace($v, $getCustomers->reason,$emailMessage);
+            }
+        }
+
+        $data = ['subject'=>$emailSubject,'message'=>$emailMessage,'year'=>date('Y') ]; // Pass your data
+
+        $pdf = Pdf::loadView('Dashboard.emailbody', $data); // Your Blade view
+        return $pdf->stream('email.pdf'); // This opens in browser
     }
 }

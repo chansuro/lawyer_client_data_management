@@ -94,9 +94,9 @@
   <div class="header">WhatsApp</div>
 
   <div class="chat-area">
-    <div class="message received">Hey! How are you?</div>
-    <div class="message sent">I'm good! You?</div>
-    <div class="message received">All well here 😄</div>
+    <!-- <div class="message received">Hey! How are you?</div> -->
+    <div class="message sent">Some text will display here. Some text will display here. Some text will display here. Some text will display here. </div>
+    <!-- <div class="message received">All well here 😄</div> -->
   </div>
 </div>
 

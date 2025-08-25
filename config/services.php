@@ -48,6 +48,13 @@ return [
     'whatsapp' => [
     'token' => env('WHATSAPP_TOKEN'),
     'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
-],
+    ],
+    'mailgun' => [
+    'domain' => env('MAILGUN_DOMAIN'),
+    'secret' => env('MAILGUN_SECRET'),
+    'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+    'from_email' => env('MAIL_FROM_ADDRESS'),
+    'from_name' => env('MAIL_FROM_NAME'),
+    ],
 
 ];

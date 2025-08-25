@@ -29,23 +29,11 @@ class SendWhatsAppMessage implements ShouldQueue
 
     public function handle()
     {
-        // for twilio whatsapp message sending
-        //$twilio->sendMessage($this->phone, $this->message);
-
         $token = config('services.whatsapp.token');
         $phoneNumberId = config('services.whatsapp.phone_number_id');
         //Log::info(['token'=>$token,'phoneNumberId'=>$phoneNumberId,'phone'=>$this->phone,'message'=>$this->message]);
         try {
-            // $response = Http::withToken($token)->post("https://graph.facebook.com/v18.0/{$phoneNumberId}/messages", [
-            //     'messaging_product' => 'whatsapp',
-            //     'to' => $this->phone,
-            //     'type' => 'text',
-            //     'text' => [
-            //         'body' => $this->message
-            //     ],
-            // ]);
-
-            $response = Http::withToken($token)->post("https://graph.facebook.com/v18.0/{$phoneNumberId}/messages", [
+            $response = Http::withToken($token)->withHeaders(['Content-Type' => 'application/json'])->post("https://graph.facebook.com/v23.0/{$phoneNumberId}/messages", [
                 'messaging_product' => 'whatsapp',
                 'to' => $this->phone,
                 'type' => 'template',
@@ -61,9 +49,7 @@ class SendWhatsAppMessage implements ShouldQueue
                 ],
             ]);
             $data = $response->json();
-            Log::info($data);
         }catch (RequestException $e) {
-            // Handle the HTTP error
             $status = $e->response->status();
             $body = $e->response->body();
             Log::error("HTTP error $status: $body");

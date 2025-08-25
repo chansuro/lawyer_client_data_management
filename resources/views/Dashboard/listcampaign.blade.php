@@ -27,9 +27,9 @@
                           <th>
                             Name
                           </th>
-                          <th>
+                          <!-- <th>
                             SMS
-                          </th>
+                          </th> -->
                           <th>
                             Email
                           </th>
@@ -51,13 +51,13 @@
                           <td>
                           {{ $campaign->name }}
                           </td>
-                          <td>
+                          <!-- <td>
                           @if($campaign->sms == 'Y')
                             <a href="http://">Send</a>
                           @endif
-                          </td>
+                          </td> -->
                           <td id="emailcampaigntd{{$campaign->id}}">
-                          @if($campaign->email == 'Y' && $campaign->sent_on_email == null)
+                          @if($campaign->email == 'Y')
                             <a href="javascript: void(0)" id="emailcampaign{{$campaign->id}}" class="sendemail" campaignId="{{$campaign->id}}">Send</a>
                           @elseif($campaign->email == 'Y' && $campaign->sent_on_email != null)
                           {{ \Carbon\Carbon::parse($campaign->sent_on_email)->format('d-M-Y')}}

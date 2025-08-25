@@ -50,20 +50,20 @@ class CustomerController extends Controller
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="users.csv"',
         ];
-        $customers = Customer::selectRaw("id, name, email")->where('campaign_id',$id)->get();
+        $customers = Customer::selectRaw("id, name, email, email_status")->where('campaign_id',$id)->get();
         $callback = function () use ($customers,$id) {
             $handle = fopen('php://output', 'w');
 
             // CSV header
-            fputcsv($handle, [ 'Name', 'Email','whatsapp link','SMS link','Email link']);
+            fputcsv($handle, [ 'Name', 'Email','whatsapp link','SMS link','Email Status','Email link']);
 
             // Fetch data from DB
             
             foreach ($customers as $customer) {
-                $url = 'http://localhost:8000/download-pdf-whatsapp/'.$id.'/'.$customer->id;
-                $url_sms = 'http://localhost:8000/download-pdf-sms/'.$id.'/'.$customer->id;
-                $url_email = 'http://localhost:8000/download-pdf-email/'.$id.'/'.$customer->id;
-                fputcsv($handle, [ $customer->name, $customer->email,$url,$url_sms,$url_email]);
+                $url = 'http://kblegalassociates.com/download-pdf-whatsapp/'.$id.'/'.$customer->id;
+                $url_sms = 'http://kblegalassociates.com/download-pdf-sms/'.$id.'/'.$customer->id;
+                $url_email = 'http://kblegalassociates.com/download-pdf-email/'.$id.'/'.$customer->id;
+                fputcsv($handle, [ $customer->name, $customer->email,$url,$url_sms,$customer->email_status,$url_email]);
             }
 
             fclose($handle);

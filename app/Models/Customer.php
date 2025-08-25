@@ -30,7 +30,9 @@ class Customer extends Model
         'notice_date',
         'email',
         'campaign_id',
-        'phone'
+        'phone',
+        'message_id',
+        'email_status'
     ];
 
     /**
